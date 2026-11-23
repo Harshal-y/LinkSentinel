@@ -319,7 +319,7 @@ def scan_url(raw):
             if 'x-powered-by' in headers: add_finding(findings,'info','Technology banner disclosed','The response includes an X-Powered-By header.',0)
         else: add_finding(findings,'info','HTTP security headers not assessed','No readable HTTP response was received, so missing-header checks were skipped.',0)
         if endpoint['redirect']:
-            red = endpoint['redirect']; add_finding(findings,'info','Redirect response detected','The server returned a redirect destination. LinkSentinel reports it but does not follow it.',0)
+            red = endpoint['redirect']; add_finding(findings,'info','Redirect response detected','The server returned a redirect destination. SecureDNS reports it but does not follow it.',0)
             if red['host_changed']:
                 score += 8; add_finding(findings,'warning','Redirect changes hostname','The redirect points to a different hostname: '+(urlsplit(red['url']).hostname or 'unknown'),8)
             if red['https_downgrade']:
@@ -437,7 +437,7 @@ def pdf_report(scan_id):
     with connect_db() as con: row=con.execute('SELECT * FROM scans WHERE id=? AND user_id=?',(scan_id,session['user_id'])).fetchone()
     if not row: abort(404)
     data=json.loads(row['report_json'] or '{}'); buf=BytesIO(); doc=SimpleDocTemplate(buf,pagesize=A4,rightMargin=18*mm,leftMargin=18*mm,topMargin=16*mm,bottomMargin=16*mm)
-    styles=getSampleStyleSheet(); story=[Paragraph('LinkSentinel Security Scan Report',styles['Title']),Spacer(1,8)]
+    styles=getSampleStyleSheet(); story=[Paragraph('SecureDNS Security Scan Report',styles['Title']),Spacer(1,8)]
     esc=lambda s: str(s).replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
     story += [Paragraph('<b>URL:</b> '+esc(data.get('url',row['url'])),styles['BodyText']),Paragraph('<b>Scanned:</b> '+esc(data.get('display_time',row['scanned_at'])),styles['BodyText']),Paragraph('<b>Risk score:</b> '+str(row['risk_score'])+'/100 &nbsp;&nbsp; <b>Verdict:</b> '+esc(row['verdict']),styles['BodyText']),Spacer(1,10)]
     story.append(Paragraph('Technical intelligence',styles['Heading2']))
@@ -448,7 +448,7 @@ def pdf_report(scan_id):
         story.append(Paragraph('<b>'+esc(f.get('title',''))+'</b> ('+str(f.get('points',0))+' points)',styles['BodyText']))
         story.append(Paragraph(esc(f.get('detail','')),styles['BodyText'])); story.append(Spacer(1,5))
     story += [Spacer(1,8),Paragraph('Limitations: This report reflects local heuristic checks and optional URLhaus data only. A low-risk result is not proof of safety. Redirects are not followed automatically.',styles['Italic'])]
-    doc.build(story); response=make_response(buf.getvalue()); response.headers['Content-Type']='application/pdf'; response.headers['Content-Disposition']=f'attachment; filename=LinkSentinel_Report_{scan_id}.pdf'; return response
+    doc.build(story); response=make_response(buf.getvalue()); response.headers['Content-Type']='application/pdf'; response.headers['Content-Disposition']=f'attachment; filename=SecureDNS_Report_{scan_id}.pdf'; return response
 
 @app.route('/health')
 def health(): return {'status':'ok','app':'LinkSentinel','version':'2.3-supabase'}

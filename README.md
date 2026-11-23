@@ -1,6 +1,6 @@
-# LinkSentinel 2.3 — Supabase-ready deployment
+# SecureDNS 2.3 — Supabase-ready deployment
 
-LinkSentinel is a Flask-based URL security analyzer. This package supports:
+SecureDNS is a Flask-based URL security analyzer. This package supports:
 - Local development with SQLite.
 - Hosted deployment with Supabase PostgreSQL.
 - User registration/login, per-user scan history, analytics dashboard and PDF reports.
@@ -59,13 +59,13 @@ python app.py
 
 Open http://127.0.0.1:5000
 
-If `DATABASE_URL` is blank, the application uses local SQLite (`linksentinel.db`). If it is set, it uses Supabase PostgreSQL.
+If `DATABASE_URL` is blank, the application uses local SQLite (`SecureDNS.db`). If it is set, it uses Supabase PostgreSQL.
 
 ## 4. Optional: migrate existing SQLite users and scans
 
 The uploaded project archive contained a local SQLite database. For safety, database files and `.env` secrets are not included in this deployment package. If you want to transfer your existing local accounts and scan history:
 
-1. Keep your original `linksentinel.db` in this project root.
+1. Keep your original `SecureDNS.db` in this project root.
 2. Configure `DATABASE_URL` in `.env`.
 3. Install requirements.
 4. Run:
@@ -111,8 +111,8 @@ Set `URLHAUS_AUTH_KEY` in Render or `.env` to enable URLhaus lookups. Leave it u
 ## 7. Docker (optional)
 
 ```bash
-docker build -t linksentinel .
-docker run --env-file .env -p 10000:10000 linksentinel
+docker build -t SecureDNS .
+docker run --env-file .env -p 10000:10000 SecureDNS
 ```
 
 ## 8. Important security notes before public launch
